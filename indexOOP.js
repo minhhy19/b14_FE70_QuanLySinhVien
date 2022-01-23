@@ -1,4 +1,5 @@
 let arrSinhVien = [];
+let kiemTra = new Validation();
 
 document.getElementById("btnXacNhan").onclick = function () {
     let sinhVien = new SinhVien();
@@ -12,12 +13,79 @@ document.getElementById("btnXacNhan").onclick = function () {
     sinhVien.diemToan = document.getElementById("diemToan").value;
     sinhVien.diemRenLuyen = document.getElementById("diemRenLuyen").value;
 
+    let valid = true;
+
+    //Bắt lỗi trước khi thêm dữ liệu vào bảng
+    valid =
+        valid &
+        kiemTra.kiemTraRong(sinhVien.maSinhVien, "#error_required_maSinhVien") &
+        kiemTra.kiemTraRong(
+            sinhVien.tenSinhVien,
+            "#error_required_tenSinhVien"
+        ) &
+        kiemTra.kiemTraRong(sinhVien.email, "#error_required_email") &
+        kiemTra.kiemTraRong(
+            sinhVien.soDienThoai,
+            "#error_required_soDienThoai"
+        ) &
+        kiemTra.kiemTraRong(sinhVien.diemToan, "#error_required_diemToan") &
+        kiemTra.kiemTraRong(sinhVien.diemLy, "#error_required_diemLy") &
+        kiemTra.kiemTraRong(sinhVien.diemHoa, "#error_required_diemHoa") &
+        kiemTra.kiemTraRong(
+            sinhVien.diemRenLuyen,
+            "#error_required_diemRenLuyen"
+        );
+
+    // Kiểm tra định dạng
+
+    valid &=
+        kiemTra.kiemTraEmail(sinhVien.email, "#error_regex_email") &
+        kiemTra.kiemTraKyTu(sinhVien.tenSinhVien, "#error_regex_tenSinhVien") &
+        kiemTra.kiemTraSo(sinhVien.soDienThoai, "#error_regex_soDienThoai");
+
+    // Kiểm tra giá trị
+    valid &=
+        kiemTra.kiemTraGiaTri(
+            sinhVien.diemToan,
+            "#error_min_max_diemToan",
+            0,
+            10
+        ) &
+        kiemTra.kiemTraGiaTri(sinhVien.diemLy, "#error_min_max_diemLy", 0, 10) &
+        kiemTra.kiemTraGiaTri(
+            sinhVien.diemHoa,
+            "#error_min_max_diemHoa",
+            0,
+            10
+        ) &
+        kiemTra.kiemTraGiaTri(
+            sinhVien.diemRenLuyen,
+            "#error_min_max_diemRenLuyen",
+            0,
+            10
+        );
+
+    // Kiểm tra độ dài
+    valid &= kiemTra.kiemTraDoDai(
+        sinhVien.maSinhVien,
+        "#error_length_maSinhVien",
+        4,
+        6
+    );
+
+    if (!valid) {
+        return;
+    }
+
     // Mỗi lần thêm sv sẽ lấy sv lưu vào mảng
     arrSinhVien.push(sinhVien);
 
     // console.log("arrSinhVien", arrSinhVien);
 
     renderTableSinhVien(arrSinhVien);
+
+    // Lưu dữ liệu vào localstorage
+    luuLocalStorage();
     {
         // // Tạo ra các thẻ trên giao diện
         // let trSinhVien = document.createElement("tr");
@@ -65,19 +133,30 @@ function renderTableSinhVien(arrSV) {
     for (let i = 0; i < arrSV.length; i++) {
         // Mỗi lần duyệt qua mảng sv => lấy ra 1 sv
         let sv = arrSV[i];
+        let sinhVien = new SinhVien(
+            sv.maSinhVien,
+            sv.tenSinhVien,
+            sv.loaiSinhVien,
+            sv.email,
+            sv.soDienThoai,
+            sv.diemToan,
+            sv.diemLy,
+            sv.diemHoa,
+            sv.diemRenLuyen
+        );
 
         // Từ mỗi dữ liệu sv => Tạo ta nội dung thẻ tr và đưa vào chuỗi nội dung
         noiDung += `
             <tr>
-                <td>${sv.maSinhVien}</td>
-                <td>${sv.tenSinhVien}</td>
-                <td>${sv.loaiSinhVien}</td>
-                <td>${sv.tinhDiemTrungBinh()}</td>
-                <td>${sv.diemRenLuyen}</td>
+                <td>${sinhVien.maSinhVien}</td>
+                <td>${sinhVien.tenSinhVien}</td>
+                <td>${sinhVien.loaiSinhVien}</td>
+                <td>${sinhVien.tinhDiemTrungBinh()}</td>
+                <td>${sinhVien.diemRenLuyen}</td>
                 <td>
-                    <button class="btn btn-danger" onclick="xoaSinhVien('${sv.maSinhVien}')">Xóa</button>
+                    <button class="btn btn-danger" onclick="xoaSinhVien('${sinhVien.maSinhVien}')">Xóa</button>
                     <button class="btn btn-danger" onclick="xoaSinhVienIndex('${i}}')">Xóa</button>
-                    <button class="btn btn-primary" onclick="suaSinhVien('${sv.maSinhVien}')">Sửa</button>
+                    <button class="btn btn-primary" onclick="suaSinhVien('${sinhVien.maSinhVien}')">Sửa</button>
                 </td>
             </tr>
         `;
@@ -104,7 +183,7 @@ function suaSinhVien(maSinhVienClick) {
 }
 
 document.getElementById("btnCapNhat").onclick = function () {
-    console.log("ok")
+    console.log("ok");
     let svUpdate = new SinhVien();
     svUpdate.maSinhVien = document.getElementById("maSinhVien").value;
     svUpdate.tenSinhVien = document.getElementById("tenSinhVien").value;
@@ -155,4 +234,42 @@ function xoaSinhVien(maSinhVienClick) {
 
     // Gọi lại hàm tạo bảng sau khi xóa dữ liệu
     renderTableSinhVien(arrSinhVien);
+}
+
+function luuLocalStorage() {
+    //Trước khi lưu biến đổi mảng obj thành chuỗi
+    let sMangSV = JSON.stringify(arrSinhVien);
+
+    // Dùng đối tượng localstorage để lưu mảng SV
+    localStorage.setItem("mangSinhVien", sMangSV);
+}
+
+function layLocalStorage() {
+    if (localStorage.getItem("mangSinhVien")) {
+        let sMangSinhVien = localStorage.getItem("mangSinhVien"); // Dữ liệu lấy ra là chuỗi
+
+        arrSinhVien = JSON.parse(sMangSinhVien);
+
+        //Gọi hàm tạo bảng sau khi lấy dữ liệu từ storage ra
+        renderTableSinhVien(arrSinhVien);
+    }
+}
+
+layLocalStorage();
+
+document.querySelector('#btnTimKiem').onclick = function () {
+    // Lấy từ khóa ng dùng nhập từ giao diện
+    let tuKhoa = document.querySelector('#tuKhoa').value;
+    tuKhoa = tuKhoa.trim().toLowerCase(); // Biến đổi tất cả ký tự hoa thành thường
+
+    let arrSinhVienTimKiem = [];
+    for(let i = 0; i < arrSinhVien.length; i ++) {
+        let sinhVien = arrSinhVien[i];
+        if (sinhVien.tenSinhVien.toLowerCase().search(tuKhoa) !== -1) {
+            arrSinhVienTimKiem.push(sinhVien);
+        }
+    }
+    //Gọi hàm tạo bảng từ mảng sv tìm kiếm
+    
+    renderTableSinhVien(arrSinhVienTimKiem);
 }

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <!-- Deploy Surge -->
+        <!-- https://hydemoajax.surge.sh/ -->
         <title>Title</title>
         <!-- Required meta tags -->
         <meta charset="utf-8" />
@@ -29,6 +31,11 @@
                             class="form-control"
                             id="maSinhVien"
                         />
+                        <p
+                            class="text-danger"
+                            id="error_required_maSinhVien"
+                        ></p>
+                        <p class="text-danger" id="error_length_maSinhVien"></p>
                     </div>
                     <div class="form-group">
                         <p>Tên sinh viên</p>
@@ -37,6 +44,11 @@
                             class="form-control"
                             id="tenSinhVien"
                         />
+                        <p
+                            class="text-danger"
+                            id="error_required_tenSinhVien"
+                        ></p>
+                        <p class="text-danger" id="error_regex_tenSinhVien"></p>
                     </div>
                     <div class="form-group">
                         <p>Loại sinh viên</p>
@@ -48,6 +60,8 @@
                     <div class="form-group">
                         <p>Email</p>
                         <input type="text" class="form-control" id="email" />
+                        <p class="text-danger" id="error_required_email"></p>
+                        <p class="text-danger" id="error_regex_email"></p>
                     </div>
                     <div class="form-group">
                         <p>Số điện thoại</p>
@@ -56,6 +70,11 @@
                             class="form-control"
                             id="soDienThoai"
                         />
+                        <p
+                            class="text-danger"
+                            id="error_required_soDienThoai"
+                        ></p>
+                        <p class="text-danger" id="error_regex_soDienThoai"></p>
                     </div>
                     <div class="row">
                         <div class="form-group col-4">
@@ -65,6 +84,14 @@
                                 class="form-control"
                                 id="diemToan"
                             />
+                            <p
+                                class="text-danger"
+                                id="error_required_diemToan"
+                            ></p>
+                            <p
+                                class="text-danger"
+                                id="error_min_max_diemToan"
+                            ></p>
                         </div>
                         <div class="form-group col-4">
                             <p>Điểm Lý</p>
@@ -73,6 +100,14 @@
                                 class="form-control"
                                 id="diemLy"
                             />
+                            <p
+                                class="text-danger"
+                                id="error_required_diemLy"
+                            ></p>
+                            <p
+                                class="text-danger"
+                                id="error_min_max_diemLy"
+                            ></p>
                         </div>
                         <div class="form-group col-4">
                             <p>Điểm Hóa</p>
@@ -81,6 +116,14 @@
                                 class="form-control"
                                 id="diemHoa"
                             />
+                            <p
+                                class="text-danger"
+                                id="error_required_diemHoa"
+                            ></p>
+                            <p
+                                class="text-danger"
+                                id="error_min_max_diemHoa"
+                            ></p>
                         </div>
                     </div>
                     <div class="form-group">
@@ -90,6 +133,14 @@
                             class="form-control"
                             id="diemRenLuyen"
                         />
+                        <p
+                            class="text-danger"
+                            id="error_required_diemRenLuyen"
+                        ></p>
+                        <p
+                            class="text-danger"
+                            id="error_min_max_diemRenLuyen"
+                        ></p>
                     </div>
                     <div class="form-group text-center">
                         <button id="btnXacNhan" class="btn btn-success">
@@ -100,6 +151,13 @@
                         </button>
                     </div>
                 </div>
+            </div>
+            <div class="form-group">
+                <p>Tìm kiếm sinh viên</p>
+                <input class="form-control" id="tuKhoa" type="text" />
+                <button class="btn btn-success mt-2" id="btnTimKiem">
+                    Tìm kiếm
+                </button>
             </div>
             <table class="table">
                 <thead>
@@ -133,10 +191,19 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"
         ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js"
+            integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
+
         <!-- Models -->
         <script src="./models/SinhVien.js"></script>
+        <script src="./models/Validation.js"></script>
 
         <!-- <script src="./index.js"></script> -->
-        <script src="./indexOOP.js"></script>
+        <!-- <script src="./indexOOP.js"></script> -->
+        <script src="./ajax.js"></script>
     </body>
 </html>

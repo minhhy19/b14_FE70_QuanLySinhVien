@@ -1,13 +1,13 @@
-function SinhVien() {
-    this.maSinhVien = "";
-    this.tenSinhVien = "";
-    this.loaiSinhVien = "";
-    this.email = "";
-    this.soDienThoai = "";
-    this.diemToan = "";
-    this.diemLy = "";
-    this.diemHoa = "";
-    this.diemRenLuyen = "";
+function SinhVien(maSV, tenSV, loaiSV, email, soDT, dToan, dLy, dHoa, dRenLuyen) {
+    this.maSinhVien = maSV;
+    this.tenSinhVien = tenSV;
+    this.loaiSinhVien = loaiSV;
+    this.email = email;
+    this.soDienThoai = soDT;
+    this.diemToan = dToan;
+    this.diemLy = dLy;
+    this.diemHoa = dHoa;
+    this.diemRenLuyen = dRenLuyen;
     this.tinhDiemTrungBinh = function () {
         let diemTrungBinh =
             (Number(this.diemToan) +
